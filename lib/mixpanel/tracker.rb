@@ -31,6 +31,10 @@ module Mixpanel
       append_api('people.set', properties)
     end
 
+    def append_identify(id)
+      append_api('identify', id)
+    end
+
     def append_person_increment_event(property, increment=1)
       append_api('people.increment', property, increment)
     end
