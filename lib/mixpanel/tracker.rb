@@ -100,6 +100,19 @@ module Mixpanel
       end
     end
 
+    def parse_special_person_properties(properties)
+      # evaluate symbols and rewrite
+      special_properties = %w{email created first_name last_name last_login username country_code}
+      special_properties.each do |key|
+        symbolized_key = key.to_sym
+        if properties.has_key?(symbolized_key)
+          properties["$#{key}"] = properties[symbolized_key]
+          properties.delete(symbolized_key)
+        end
+      end
+      properties
+    end
+
     private
 
     def engage_event(distinct_id, type, properties = {})
@@ -134,19 +147,6 @@ module Mixpanel
 
     def build_event(event, properties)
       {:event => event, :properties => properties}
-    end
-
-    def parse_special_person_properties(properties)
-      # evaluate symbols and rewrite
-      special_properties = %w{email created first_name last_name last_login username country_code}
-      special_properties.each do |key|
-        symbolized_key = key.to_sym
-        if properties.has_key?(symbolized_key)
-          properties["$#{key}"] = properties[symbolized_key]
-          properties.delete(symbolized_key)
-        end
-      end
-      properties
     end
   end
 end
