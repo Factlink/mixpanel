@@ -24,6 +24,14 @@ module Mixpanel
       append_api('people.set', properties)
     end
 
+    def set_person_event(distinct_id, properties = {})
+      engage_event distinct_id, :set, properties
+    end
+
+    def increment_person_event(distinct_id, properties = {})
+      engage_event distinct_id, :add, properties
+    end
+
     def append_identify(id)
       append_api('identify', id)
     end
