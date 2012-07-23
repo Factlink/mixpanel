@@ -94,6 +94,15 @@ module Mixpanel
 
     private
 
+    def engage_event(distinct_id, type, properties = {})
+      properties = parse_special_person_properties properties
+
+      options = { :"$distinct_id" => distinct_id, :"$#{type}" => properties }
+      options.merge!( :token => @token ) if @token
+
+      parse_response request(:engage, options)
+    end
+
     def parse_response(response)
       response == "1" ? true : false
     end
