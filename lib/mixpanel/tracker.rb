@@ -19,15 +19,8 @@ module Mixpanel
     end
 
     def append_person_event(properties = {})
-      # evaluate symbols and rewrite
-      special_properties = %w{email created first_name last_name last_login username country_code}
-      special_properties.each do |key|
-        symbolized_key = key.to_sym
-        if properties.has_key?(symbolized_key)
-          properties["$#{key}"] = properties[symbolized_key]
-          properties.delete(symbolized_key)
-        end
-      end
+      properties = parse_special_person_properties properties
+
       append_api('people.set', properties)
     end
 
@@ -124,6 +117,19 @@ module Mixpanel
 
     def build_event(event, properties)
       {:event => event, :properties => properties}
+    end
+
+    def parse_special_person_properties(properties)
+      # evaluate symbols and rewrite
+      special_properties = %w{email created first_name last_name last_login username country_code}
+      special_properties.each do |key|
+        symbolized_key = key.to_sym
+        if properties.has_key?(symbolized_key)
+          properties["$#{key}"] = properties[symbolized_key]
+          properties.delete(symbolized_key)
+        end
+      end
+      properties
     end
   end
 end
