@@ -119,7 +119,7 @@ module Mixpanel
       properties = parse_special_person_properties properties
 
       options = { :"$distinct_id" => distinct_id, :"$#{type}" => properties }
-      options.merge!( :token => @token ) if @token
+      options.merge!( "$token" => @token ) if @token
 
       parse_response request(:engage, options)
     end
